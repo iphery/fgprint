@@ -82,15 +82,198 @@ class _PrinterPageState extends State<PrinterPage> with TrayListener {
       pw.Page(
         pageFormat: customPaperSize, // Set the custom paper size here
         build: (pw.Context context) {
-          return pw.Center(
-            child: pw.Row(
-              mainAxisAlignment: pw.MainAxisAlignment.center,
-              children: [
-                pw.Text('Name: Paul Scholes',
-                    style: pw.TextStyle(fontSize: 10)),
-                pw.Text('Age: 40', style: pw.TextStyle(fontSize: 10)),
-              ],
-            ),
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text('Apotek Bekul',
+                  style: pw.TextStyle(
+                      fontSize: 20, fontWeight: pw.FontWeight.bold)),
+              pw.Text('Jl Apa kaden adane', style: pw.TextStyle(fontSize: 14)),
+              pw.SizedBox(height: 20),
+
+              // Date & Order Number
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [pw.Text("10/10/2025"), pw.Text('SO32483099')],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.end,
+                children: [pw.Text('Putu Hery')],
+              ),
+              pw.Divider(thickness: 0.5),
+
+              // Headers
+              pw.Row(
+                children: [
+                  pw.Expanded(
+                      flex: 15,
+                      child: pw.Text('No', textAlign: pw.TextAlign.left)),
+                  pw.Expanded(
+                      flex: 15,
+                      child: pw.Text('Qty', textAlign: pw.TextAlign.center)),
+                  pw.Expanded(
+                      flex: 35,
+                      child: pw.Text('Harga', textAlign: pw.TextAlign.right)),
+                  pw.Expanded(
+                      flex: 35,
+                      child: pw.Text('Total', textAlign: pw.TextAlign.right)),
+                ],
+              ),
+              pw.Divider(thickness: 0.5),
+
+              // Product Rows
+              pw.Row(
+                children: [
+                  pw.Expanded(
+                      flex: 15,
+                      child: pw.Text('1', textAlign: pw.TextAlign.left)),
+                  pw.Expanded(
+                      flex: 15,
+                      child: pw.Text('2 PCS', textAlign: pw.TextAlign.center)),
+                  pw.Expanded(
+                      flex: 35,
+                      child:
+                          pw.Text('x 10.000', textAlign: pw.TextAlign.right)),
+                  pw.Expanded(
+                      flex: 35,
+                      child: pw.Text('20.000', textAlign: pw.TextAlign.right)),
+                ],
+              ),
+              pw.Divider(thickness: 0.5),
+
+              // Summary
+              pw.Row(
+                children: [pw.Text('Total Item: 1')],
+              ),
+              pw.Divider(thickness: 0.5),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [pw.Text('DISC'), pw.Text('0')],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [pw.Text('TOTAL'), pw.Text('20.000')],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [pw.Text('TUNAI'), pw.Text('20.000')],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [pw.Text('KEMBALIAN'), pw.Text('0')],
+              ),
+            ],
+          );
+        },
+      ),
+    );
+
+    // Ambil daftar printer yang tersedia
+    final List<Printer> printers = await Printing.listPrinters();
+
+    // if (printers.isNotEmpty) {
+    //   final Printer selectedPrinter = printers[5];
+
+    //   await Printing.directPrintPdf(
+    //     printer: selectedPrinter,
+    //     onLayout: (PdfPageFormat format) async => pdf.save(),
+    //   );
+    //   print('print berhasil');
+    // } else {
+    //   print("Tidak ada printer yang tersedia.");
+    // }
+  }
+
+  Future<void> silentPrint1() async {
+    // Membuat dokumen PDF untuk mencetak teks langsung
+
+    final pdf = pw.Document();
+    final customPaperSize = PdfPageFormat(82, 200);
+    pdf.addPage(
+      pw.Page(
+        pageFormat: customPaperSize, // Set the custom paper size here
+        build: (pw.Context context) {
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text('Apotek Bekul',
+                  style: pw.TextStyle(
+                      fontSize: 20, fontWeight: pw.FontWeight.bold)),
+              pw.Text('Jl Apa kaden adane', style: pw.TextStyle(fontSize: 14)),
+              pw.SizedBox(height: 20),
+
+              // Date & Order Number
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [pw.Text("10/10/2025"), pw.Text('SO32483099')],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.end,
+                children: [pw.Text('Putu Hery')],
+              ),
+              pw.Divider(thickness: 0.5),
+
+              // Headers
+              pw.Row(
+                children: [
+                  pw.Expanded(
+                      flex: 15,
+                      child: pw.Text('No', textAlign: pw.TextAlign.left)),
+                  pw.Expanded(
+                      flex: 15,
+                      child: pw.Text('Qty', textAlign: pw.TextAlign.center)),
+                  pw.Expanded(
+                      flex: 35,
+                      child: pw.Text('Harga', textAlign: pw.TextAlign.right)),
+                  pw.Expanded(
+                      flex: 35,
+                      child: pw.Text('Total', textAlign: pw.TextAlign.right)),
+                ],
+              ),
+              pw.Divider(thickness: 0.5),
+
+              // Product Rows
+              pw.Row(
+                children: [
+                  pw.Expanded(
+                      flex: 15,
+                      child: pw.Text('1', textAlign: pw.TextAlign.left)),
+                  pw.Expanded(
+                      flex: 15,
+                      child: pw.Text('2 PCS', textAlign: pw.TextAlign.center)),
+                  pw.Expanded(
+                      flex: 35,
+                      child:
+                          pw.Text('x 10.000', textAlign: pw.TextAlign.right)),
+                  pw.Expanded(
+                      flex: 35,
+                      child: pw.Text('20.000', textAlign: pw.TextAlign.right)),
+                ],
+              ),
+              pw.Divider(thickness: 0.5),
+
+              // Summary
+              pw.Row(
+                children: [pw.Text('Total Item: 1')],
+              ),
+              pw.Divider(thickness: 0.5),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [pw.Text('DISC'), pw.Text('0')],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [pw.Text('TOTAL'), pw.Text('20.000')],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [pw.Text('TUNAI'), pw.Text('20.000')],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [pw.Text('KEMBALIAN'), pw.Text('0')],
+              ),
+            ],
           );
         },
       ),
@@ -284,7 +467,151 @@ class _PrinterPageState extends State<PrinterPage> with TrayListener {
                 height: 20,
               ),
               GestureDetector(
-                  onTap: () => {testPrint()}, child: const Text('Test Print')),
+                  onTap: () => {silentPrint1()},
+                  child: const Text('Test Print')),
+              Container(
+                child: Column(
+                  children: [
+                    Text('Apotek Bekul'),
+                    Text('Jl Apa kaden adane'),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [Text("10/10/2025"), Text('SO32483099')],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [Text('Putu Hery')],
+                    ),
+                    Divider(
+                      thickness: 0.5, // Thin hairline
+                      color: Colors.grey, // Adjust color as needed
+                      height: 1, // Minimal height
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 20, // 15% width
+                        ),
+                        Expanded(
+                          // flex: 15, // 15% width
+                          child: Center(child: Text('Kode / Nama Produk')),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                            flex: 15, // 15% width
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text('No'),
+                            )),
+                        Expanded(
+                          flex: 15, // 15% width
+                          child: Center(child: Text('Qty')),
+                        ),
+                        Expanded(
+                          flex: 35, // 35% width
+                          child: Align(
+                            alignment: Alignment
+                                .centerRight, // Align text to the right
+                            child: Text('Harga'),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 35, // 35% width
+                          child: Align(
+                            alignment: Alignment
+                                .centerRight, // Align text to the right
+                            child: Text('Total'),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Divider(
+                      thickness: 0.5, // Thin hairline
+                      color: Colors.grey, // Adjust color as needed
+                      height: 1, // Minimal height
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 20, // 15% width
+                          child: Center(child: Text('1')),
+                        ),
+                        Expanded(
+                          // flex: 15, // 15% width
+                          child: Center(
+                              child:
+                                  Text('NIVEA SUN AFTER SUN MOISTURE 200ML')),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 15, // 15% width
+                          child: Center(child: Text('2')),
+                        ),
+                        Expanded(
+                          flex: 15, // 15% width
+                          child: Center(child: Text('PCS')),
+                        ),
+                        Expanded(
+                          flex: 35, // 35% width
+                          child: Align(
+                            alignment: Alignment
+                                .centerRight, // Align text to the right
+                            child: Text('x 10.000'),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 35, // 35% width
+                          child: Align(
+                            alignment: Alignment
+                                .centerRight, // Align text to the right
+                            child: Text('20.000'),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Divider(
+                      thickness: 0.5, // Thin hairline
+                      color: Colors.grey, // Adjust color as needed
+                      height: 1, // Minimal height
+                    ),
+                    Row(
+                      children: [
+                        Text('Total Item : ${"1"}'),
+                      ],
+                    ),
+                    Divider(
+                      thickness: 0.5, // Thin hairline
+                      color: Colors.grey, // Adjust color as needed
+                      height: 1, // Minimal height
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [Text('DISC'), Text('0')],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [Text('TOTAL'), Text('0')],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [Text('TUNAI'), Text('0')],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [Text('KEMBALIAN'), Text('0')],
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ));
