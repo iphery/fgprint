@@ -75,7 +75,7 @@ class _PrinterPageState extends State<PrinterPage> with TrayListener {
 
   Future<void> silentPrint(message) async {
     // Membuat dokumen PDF untuk mencetak teks langsung
-    print(message);
+
     final pdf = pw.Document();
     final customPaperSize = PdfPageFormat(82, 200);
     pdf.addPage(
@@ -130,7 +130,7 @@ class _PrinterPageState extends State<PrinterPage> with TrayListener {
     final selectedPrinter = printerList.firstWhere(
       (p) => p.name == selectedPrinterName && p.url == selectedPrinterUrl,
     );
-
+    print(selectedPrinter.name);
     await Printing.directPrintPdf(
       printer: selectedPrinter,
       onLayout: (PdfPageFormat format) async => pdf.save(),
@@ -173,6 +173,8 @@ class _PrinterPageState extends State<PrinterPage> with TrayListener {
     String? printerUrl = prefs.getString("printerUrl");
     setState(() {
       showList = false;
+      selectedPrinterName = printerName ?? "";
+      selectedPrinterUrl = printerUrl ?? "";
     });
     if (printerName != null && printerUrl != null) {
       final printerList = await Printing.listPrinters();
@@ -223,8 +225,8 @@ class _PrinterPageState extends State<PrinterPage> with TrayListener {
             children: [
               Row(
                 children: [
-                  Text('Connected to : '),
-                  SizedBox(
+                  const Text('Connected to : '),
+                  const SizedBox(
                     width: 5,
                   ),
                   Column(
@@ -251,15 +253,36 @@ class _PrinterPageState extends State<PrinterPage> with TrayListener {
                       onTap: () => {
                         savePrinterInfo(printer).then((e) => {getPrinterInfo()})
                       },
-                      child: Column(
-                        children: [
-                          Text(printer.name),
-                          Text(printer.model ?? "No description")
-                        ],
+                      child: Container(
+                        padding: EdgeInsets.only(left: 15),
+                        color: Colors.grey,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text("${index + 1}"),
+                            const SizedBox(
+                              width: 15,
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(printer.name),
+                                Text(printer.model ?? "No description"),
+                                const SizedBox(
+                                  height: 5,
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
                 ),
+              const SizedBox(
+                height: 20,
+              ),
               GestureDetector(
                   onTap: () => {testPrint()}, child: const Text('Test Print')),
             ],
