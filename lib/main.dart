@@ -189,168 +189,144 @@ class _PrinterPageState extends State<PrinterPage> with TrayListener {
 
     final pdf = pw.Document();
     final customPaperSize = PdfPageFormat(82, 200);
+
     pdf.addPage(
       pw.Page(
-        pageFormat: PdfPageFormat.roll80, // Use 80mm thermal paper
         build: (pw.Context context) {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Center(
-                child: pw.Text(
-                  'Apotek Bekul',
-                  style:
-                      pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
-                ),
+                child: pw.Text("Apotek Bekul",
+                    style: pw.TextStyle(
+                        fontSize: 9, fontWeight: pw.FontWeight.bold)),
               ),
               pw.Center(
-                child: pw.Text(
-                  'Jl Apa kaden adane',
-                  style: pw.TextStyle(fontSize: 9),
-                ),
+                child: pw.Text("Jl Apa kaden adane",
+                    style: pw.TextStyle(fontSize: 9)),
               ),
-              pw.SizedBox(height: 10),
-
-              // Date and Invoice Number
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  pw.Text('10/10/2025', style: pw.TextStyle(fontSize: 9)),
-                  pw.Text('SO32483099', style: pw.TextStyle(fontSize: 9)),
-                ],
-              ),
-
               pw.Divider(thickness: 0.5),
 
-              // Header
+              // 🛒 TABLE START
               pw.Table(
                 border: pw.TableBorder.all(width: 0.5),
                 columnWidths: {
-                  0: pw.FlexColumnWidth(1),
-                  1: pw.FlexColumnWidth(2),
-                  2: pw.FlexColumnWidth(2),
-                  3: pw.FlexColumnWidth(2),
+                  0: pw.FixedColumnWidth(20), // No
+                  1: pw.FixedColumnWidth(30), // Qty
+                  2: pw.FlexColumnWidth(1), // Product Name
+                  3: pw.FixedColumnWidth(40), // Price
+                  4: pw.FixedColumnWidth(50), // Total
                 },
                 children: [
+                  // 🔹 HEADER ROW
                   pw.TableRow(
                     children: [
                       pw.Padding(
-                        padding: pw.EdgeInsets.all(2),
-                        child: pw.Text('No',
-                            style: pw.TextStyle(fontSize: 9),
-                            textAlign: pw.TextAlign.center),
-                      ),
+                          child:
+                              pw.Text("No", style: pw.TextStyle(fontSize: 9)),
+                          padding: pw.EdgeInsets.all(3)),
                       pw.Padding(
-                        padding: pw.EdgeInsets.all(2),
-                        child: pw.Text('Qty',
-                            style: pw.TextStyle(fontSize: 9),
-                            textAlign: pw.TextAlign.center),
-                      ),
+                          child:
+                              pw.Text("Qty", style: pw.TextStyle(fontSize: 9)),
+                          padding: pw.EdgeInsets.all(3)),
                       pw.Padding(
-                        padding: pw.EdgeInsets.all(2),
-                        child: pw.Text('Harga',
-                            style: pw.TextStyle(fontSize: 9),
-                            textAlign: pw.TextAlign.right),
-                      ),
+                          child: pw.Text("Kode / Nama Produk",
+                              style: pw.TextStyle(fontSize: 9)),
+                          padding: pw.EdgeInsets.all(3)),
                       pw.Padding(
-                        padding: pw.EdgeInsets.all(2),
-                        child: pw.Text('Total',
-                            style: pw.TextStyle(fontSize: 9),
-                            textAlign: pw.TextAlign.right),
+                          child: pw.Text("Harga",
+                              style: pw.TextStyle(fontSize: 9)),
+                          padding: pw.EdgeInsets.all(3)),
+                      pw.Padding(
+                          child: pw.Text("Total",
+                              style: pw.TextStyle(fontSize: 9)),
+                          padding: pw.EdgeInsets.all(3)),
+                    ],
+                  ),
+
+                  // 🔹 PRODUCT 1 - DESCRIPTION ROW (MERGED)
+                  pw.TableRow(
+                    children: [
+                      pw.Container(), // Empty
+                      pw.Container(), // Empty
+                      pw.Padding(
+                        padding: pw.EdgeInsets.all(3),
+                        child: pw.Text(
+                          "NIVEA SUN AFTER SUN MOISTURE 200ML",
+                          style: pw.TextStyle(
+                              fontSize: 9, fontWeight: pw.FontWeight.bold),
+                        ),
                       ),
+                      pw.Container(), // Empty
+                      pw.Container(), // Empty
+                    ],
+                  ),
+
+                  // 🔹 PRODUCT 1 - DETAILS ROW
+                  pw.TableRow(
+                    children: [
+                      pw.Padding(
+                          child: pw.Text("1", style: pw.TextStyle(fontSize: 9)),
+                          padding: pw.EdgeInsets.all(3)),
+                      pw.Padding(
+                          child: pw.Text("2 PCS",
+                              style: pw.TextStyle(fontSize: 9)),
+                          padding: pw.EdgeInsets.all(3)),
+                      pw.Padding(
+                          child: pw.Text("", style: pw.TextStyle(fontSize: 9)),
+                          padding: pw.EdgeInsets.all(3)), // Empty
+                      pw.Padding(
+                          child: pw.Text("x 10.000",
+                              style: pw.TextStyle(fontSize: 9)),
+                          padding: pw.EdgeInsets.all(3)),
+                      pw.Padding(
+                          child: pw.Text("20.000",
+                              style: pw.TextStyle(fontSize: 9)),
+                          padding: pw.EdgeInsets.all(3)),
                     ],
                   ),
                 ],
               ),
-
-              // Product Row
-              pw.Table(
-                border: pw.TableBorder.all(width: 0.5),
-                columnWidths: {
-                  0: pw.FlexColumnWidth(1),
-                  1: pw.FlexColumnWidth(2),
-                  2: pw.FlexColumnWidth(2),
-                  3: pw.FlexColumnWidth(2),
-                },
-                children: [
-                  pw.TableRow(
-                    children: [
-                      pw.Padding(
-                        padding: pw.EdgeInsets.all(2),
-                        child: pw.Text('1',
-                            style: pw.TextStyle(fontSize: 9),
-                            textAlign: pw.TextAlign.center),
-                      ),
-                      pw.Padding(
-                        padding: pw.EdgeInsets.all(2),
-                        child: pw.Text('2 PCS',
-                            style: pw.TextStyle(fontSize: 9),
-                            textAlign: pw.TextAlign.center),
-                      ),
-                      pw.Padding(
-                        padding: pw.EdgeInsets.all(2),
-                        child: pw.Text('10.000',
-                            style: pw.TextStyle(fontSize: 9),
-                            textAlign: pw.TextAlign.right),
-                      ),
-                      pw.Padding(
-                        padding: pw.EdgeInsets.all(2),
-                        child: pw.Text('20.000',
-                            style: pw.TextStyle(fontSize: 9),
-                            textAlign: pw.TextAlign.right),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+              // 🛒 TABLE END
 
               pw.Divider(thickness: 0.5),
-
-              // Summary
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text('DISC', style: pw.TextStyle(fontSize: 9)),
-                  pw.Text('0', style: pw.TextStyle(fontSize: 9)),
-                ],
-              ),
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  pw.Text('TOTAL',
+                  pw.Text("TOTAL:",
                       style: pw.TextStyle(
                           fontSize: 9, fontWeight: pw.FontWeight.bold)),
-                  pw.Text('20.000',
+                  pw.Text("20.000", style: pw.TextStyle(fontSize: 9)),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("TUNAI:",
                       style: pw.TextStyle(
                           fontSize: 9, fontWeight: pw.FontWeight.bold)),
+                  pw.Text("50.000", style: pw.TextStyle(fontSize: 9)),
                 ],
               ),
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text('TUNAI', style: pw.TextStyle(fontSize: 9)),
-                  pw.Text('50.000', style: pw.TextStyle(fontSize: 9)),
+                  pw.Text("KEMBALIAN:",
+                      style: pw.TextStyle(
+                          fontSize: 9, fontWeight: pw.FontWeight.bold)),
+                  pw.Text("30.000", style: pw.TextStyle(fontSize: 9)),
                 ],
               ),
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  pw.Text('KEMBALIAN', style: pw.TextStyle(fontSize: 9)),
-                  pw.Text('30.000', style: pw.TextStyle(fontSize: 9)),
-                ],
-              ),
-
-              pw.SizedBox(height: 10),
+              pw.Divider(thickness: 0.5),
               pw.Center(
-                child:
-                    pw.Text('Terima Kasih', style: pw.TextStyle(fontSize: 9)),
-              ),
+                  child: pw.Text("Terima Kasih",
+                      style: pw.TextStyle(fontSize: 9))),
             ],
           );
         },
       ),
-      // Ambil daftar printer yang tersedia
     );
+
     final List<Printer> printerList = await Printing.listPrinters();
     final selectedPrinter = printerList.firstWhere(
       (p) => p.name == selectedPrinterName && p.url == selectedPrinterUrl,
