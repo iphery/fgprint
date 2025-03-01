@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
@@ -9,6 +11,7 @@ import 'package:printing/printing.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:tray_manager/tray_manager.dart';
+import 'dart:ui' as ui;
 
 void Function(String)? onMessageReceived;
 void main() {
@@ -65,6 +68,7 @@ class _PrinterPageState extends State<PrinterPage> with TrayListener {
   String selectedPrinterName = "";
   String selectedPrinterUrl = "";
   bool showList = false;
+  final GlobalKey _globalKey = GlobalKey();
 
   Future<void> _getPrinters() async {
     _printers = await Printing.listPrinters();
@@ -394,8 +398,141 @@ class _PrinterPageState extends State<PrinterPage> with TrayListener {
     }
   }
 
+  TextStyle receiptTextStyle = TextStyle(fontSize: 9); // Set global font size
+  Future<void> _captureAndPrint() async {
+    try {
+      RenderRepaintBoundary boundary = _globalKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
+      ui.Image image = await boundary.toImage(
+          pixelRatio: 3.0); // Higher resolution for clarity
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
+
+      // Print captured image
+      await Printing.layoutPdf(onLayout: (format) async => pngBytes);
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: [
+          Expanded(
+            child: RepaintBoundary(
+              key: _globalKey,
+              child: Container(
+                color: Colors.white,
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Apotek Bekul',
+                        style: receiptTextStyle.copyWith(
+                            fontWeight: FontWeight.bold)),
+                    Text('Jl Apa kaden adane', style: receiptTextStyle),
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("10/10/2025", style: receiptTextStyle),
+                        Text('SO32483099', style: receiptTextStyle),
+                      ],
+                    ),
+                    Divider(thickness: 0.5, color: Colors.grey),
+                    Row(
+                      children: [
+                        Expanded(
+                            flex: 15,
+                            child: Text('No',
+                                textAlign: TextAlign.left,
+                                style: receiptTextStyle)),
+                        Expanded(
+                            flex: 15,
+                            child: Text('Qty',
+                                textAlign: TextAlign.center,
+                                style: receiptTextStyle)),
+                        Expanded(
+                            flex: 35,
+                            child: Text('Harga',
+                                textAlign: TextAlign.right,
+                                style: receiptTextStyle)),
+                        Expanded(
+                            flex: 35,
+                            child: Text('Total',
+                                textAlign: TextAlign.right,
+                                style: receiptTextStyle)),
+                      ],
+                    ),
+                    Divider(thickness: 0.5, color: Colors.grey),
+                    Row(
+                      children: [
+                        Expanded(
+                            flex: 15,
+                            child: Text('1',
+                                textAlign: TextAlign.left,
+                                style: receiptTextStyle)),
+                        Expanded(
+                            flex: 15,
+                            child: Text('2 PCS',
+                                textAlign: TextAlign.center,
+                                style: receiptTextStyle)),
+                        Expanded(
+                            flex: 35,
+                            child: Text('x 10.000',
+                                textAlign: TextAlign.right,
+                                style: receiptTextStyle)),
+                        Expanded(
+                            flex: 35,
+                            child: Text('20.000',
+                                textAlign: TextAlign.right,
+                                style: receiptTextStyle)),
+                      ],
+                    ),
+                    Divider(thickness: 0.5, color: Colors.grey),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('DISC', style: receiptTextStyle),
+                        Text('0', style: receiptTextStyle),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('TOTAL', style: receiptTextStyle),
+                        Text('0', style: receiptTextStyle),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('TUNAI', style: receiptTextStyle),
+                        Text('0', style: receiptTextStyle),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('KEMBALIAN', style: receiptTextStyle),
+                        Text('0', style: receiptTextStyle),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: _captureAndPrint,
+            child: Text("Print Receipt", style: TextStyle(fontSize: 9)),
+          ),
+        ],
+      ),
+    );
     return Scaffold(
         appBar: AppBar(
           title: const Text('Setup Printer'),
