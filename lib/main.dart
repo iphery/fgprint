@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -11,7 +8,6 @@ import 'package:printing/printing.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:tray_manager/tray_manager.dart';
-import 'dart:ui' as ui;
 
 void Function(String)? onMessageReceived;
 void main() {
@@ -195,108 +191,175 @@ class _PrinterPageState extends State<PrinterPage> with TrayListener {
     final customPaperSize = PdfPageFormat(82, 200);
     pdf.addPage(
       pw.Page(
-        pageFormat: customPaperSize, // Set the custom paper size here
+        pageFormat: PdfPageFormat.roll80, // Use 80mm thermal paper
         build: (pw.Context context) {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              pw.Text('Apotek Bekul',
-                  style: pw.TextStyle(
-                      fontSize: 20, fontWeight: pw.FontWeight.bold)),
-              pw.Text('Jl Apa kaden adane', style: pw.TextStyle(fontSize: 14)),
-              pw.SizedBox(height: 20),
+              pw.Center(
+                child: pw.Text(
+                  'Apotek Bekul',
+                  style:
+                      pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
+                ),
+              ),
+              pw.Center(
+                child: pw.Text(
+                  'Jl Apa kaden adane',
+                  style: pw.TextStyle(fontSize: 9),
+                ),
+              ),
+              pw.SizedBox(height: 10),
 
-              // Date & Order Number
+              // Date and Invoice Number
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [pw.Text("10/10/2025"), pw.Text('SO32483099')],
-              ),
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.end,
-                children: [pw.Text('Putu Hery')],
-              ),
-              pw.Divider(thickness: 0.5),
-
-              // Headers
-              pw.Row(
                 children: [
-                  pw.Expanded(
-                      flex: 15,
-                      child: pw.Text('No', textAlign: pw.TextAlign.left)),
-                  pw.Expanded(
-                      flex: 15,
-                      child: pw.Text('Qty', textAlign: pw.TextAlign.center)),
-                  pw.Expanded(
-                      flex: 35,
-                      child: pw.Text('Harga', textAlign: pw.TextAlign.right)),
-                  pw.Expanded(
-                      flex: 35,
-                      child: pw.Text('Total', textAlign: pw.TextAlign.right)),
+                  pw.Text('10/10/2025', style: pw.TextStyle(fontSize: 9)),
+                  pw.Text('SO32483099', style: pw.TextStyle(fontSize: 9)),
                 ],
               ),
+
               pw.Divider(thickness: 0.5),
 
-              // Product Rows
-              pw.Row(
+              // Header
+              pw.Table(
+                border: pw.TableBorder.all(width: 0.5),
+                columnWidths: {
+                  0: pw.FlexColumnWidth(1),
+                  1: pw.FlexColumnWidth(2),
+                  2: pw.FlexColumnWidth(2),
+                  3: pw.FlexColumnWidth(2),
+                },
                 children: [
-                  pw.Expanded(
-                      flex: 15,
-                      child: pw.Text('1', textAlign: pw.TextAlign.left)),
-                  pw.Expanded(
-                      flex: 15,
-                      child: pw.Text('2 PCS', textAlign: pw.TextAlign.center)),
-                  pw.Expanded(
-                      flex: 35,
-                      child:
-                          pw.Text('x 10.000', textAlign: pw.TextAlign.right)),
-                  pw.Expanded(
-                      flex: 35,
-                      child: pw.Text('20.000', textAlign: pw.TextAlign.right)),
+                  pw.TableRow(
+                    children: [
+                      pw.Padding(
+                        padding: pw.EdgeInsets.all(2),
+                        child: pw.Text('No',
+                            style: pw.TextStyle(fontSize: 9),
+                            textAlign: pw.TextAlign.center),
+                      ),
+                      pw.Padding(
+                        padding: pw.EdgeInsets.all(2),
+                        child: pw.Text('Qty',
+                            style: pw.TextStyle(fontSize: 9),
+                            textAlign: pw.TextAlign.center),
+                      ),
+                      pw.Padding(
+                        padding: pw.EdgeInsets.all(2),
+                        child: pw.Text('Harga',
+                            style: pw.TextStyle(fontSize: 9),
+                            textAlign: pw.TextAlign.right),
+                      ),
+                      pw.Padding(
+                        padding: pw.EdgeInsets.all(2),
+                        child: pw.Text('Total',
+                            style: pw.TextStyle(fontSize: 9),
+                            textAlign: pw.TextAlign.right),
+                      ),
+                    ],
+                  ),
                 ],
               ),
+
+              // Product Row
+              pw.Table(
+                border: pw.TableBorder.all(width: 0.5),
+                columnWidths: {
+                  0: pw.FlexColumnWidth(1),
+                  1: pw.FlexColumnWidth(2),
+                  2: pw.FlexColumnWidth(2),
+                  3: pw.FlexColumnWidth(2),
+                },
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Padding(
+                        padding: pw.EdgeInsets.all(2),
+                        child: pw.Text('1',
+                            style: pw.TextStyle(fontSize: 9),
+                            textAlign: pw.TextAlign.center),
+                      ),
+                      pw.Padding(
+                        padding: pw.EdgeInsets.all(2),
+                        child: pw.Text('2 PCS',
+                            style: pw.TextStyle(fontSize: 9),
+                            textAlign: pw.TextAlign.center),
+                      ),
+                      pw.Padding(
+                        padding: pw.EdgeInsets.all(2),
+                        child: pw.Text('10.000',
+                            style: pw.TextStyle(fontSize: 9),
+                            textAlign: pw.TextAlign.right),
+                      ),
+                      pw.Padding(
+                        padding: pw.EdgeInsets.all(2),
+                        child: pw.Text('20.000',
+                            style: pw.TextStyle(fontSize: 9),
+                            textAlign: pw.TextAlign.right),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+
               pw.Divider(thickness: 0.5),
 
               // Summary
               pw.Row(
-                children: [pw.Text('Total Item: 1')],
-              ),
-              pw.Divider(thickness: 0.5),
-              pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [pw.Text('DISC'), pw.Text('0')],
-              ),
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [pw.Text('TOTAL'), pw.Text('20.000')],
+                children: [
+                  pw.Text('DISC', style: pw.TextStyle(fontSize: 9)),
+                  pw.Text('0', style: pw.TextStyle(fontSize: 9)),
+                ],
               ),
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [pw.Text('TUNAI'), pw.Text('20.000')],
+                children: [
+                  pw.Text('TOTAL',
+                      style: pw.TextStyle(
+                          fontSize: 9, fontWeight: pw.FontWeight.bold)),
+                  pw.Text('20.000',
+                      style: pw.TextStyle(
+                          fontSize: 9, fontWeight: pw.FontWeight.bold)),
+                ],
               ),
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [pw.Text('KEMBALIAN'), pw.Text('0')],
+                children: [
+                  pw.Text('TUNAI', style: pw.TextStyle(fontSize: 9)),
+                  pw.Text('50.000', style: pw.TextStyle(fontSize: 9)),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text('KEMBALIAN', style: pw.TextStyle(fontSize: 9)),
+                  pw.Text('30.000', style: pw.TextStyle(fontSize: 9)),
+                ],
+              ),
+
+              pw.SizedBox(height: 10),
+              pw.Center(
+                child:
+                    pw.Text('Terima Kasih', style: pw.TextStyle(fontSize: 9)),
               ),
             ],
           );
         },
       ),
+      // Ambil daftar printer yang tersedia
     );
-
-    // Ambil daftar printer yang tersedia
-    final List<Printer> printers = await Printing.listPrinters();
-
-    // if (printers.isNotEmpty) {
-    //   final Printer selectedPrinter = printers[5];
-
-    //   await Printing.directPrintPdf(
-    //     printer: selectedPrinter,
-    //     onLayout: (PdfPageFormat format) async => pdf.save(),
-    //   );
-    //   print('print berhasil');
-    // } else {
-    //   print("Tidak ada printer yang tersedia.");
-    // }
+    final List<Printer> printerList = await Printing.listPrinters();
+    final selectedPrinter = printerList.firstWhere(
+      (p) => p.name == selectedPrinterName && p.url == selectedPrinterUrl,
+    );
+    print(selectedPrinter.name);
+    await Printing.directPrintPdf(
+      printer: selectedPrinter,
+      onLayout: (PdfPageFormat format) async => pdf.save(),
+    );
   }
 
   Future<void> testPrint() async {
@@ -398,141 +461,8 @@ class _PrinterPageState extends State<PrinterPage> with TrayListener {
     }
   }
 
-  TextStyle receiptTextStyle = TextStyle(fontSize: 9); // Set global font size
-  Future<void> _captureAndPrint() async {
-    try {
-      RenderRepaintBoundary boundary = _globalKey.currentContext!
-          .findRenderObject() as RenderRepaintBoundary;
-      ui.Image image = await boundary.toImage(
-          pixelRatio: 3.0); // Higher resolution for clarity
-      ByteData? byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
-      Uint8List pngBytes = byteData!.buffer.asUint8List();
-
-      // Print captured image
-      await Printing.layoutPdf(onLayout: (format) async => pngBytes);
-    } catch (e) {
-      print("Error: $e");
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: RepaintBoundary(
-              key: _globalKey,
-              child: Container(
-                color: Colors.white,
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Apotek Bekul',
-                        style: receiptTextStyle.copyWith(
-                            fontWeight: FontWeight.bold)),
-                    Text('Jl Apa kaden adane', style: receiptTextStyle),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("10/10/2025", style: receiptTextStyle),
-                        Text('SO32483099', style: receiptTextStyle),
-                      ],
-                    ),
-                    Divider(thickness: 0.5, color: Colors.grey),
-                    Row(
-                      children: [
-                        Expanded(
-                            flex: 15,
-                            child: Text('No',
-                                textAlign: TextAlign.left,
-                                style: receiptTextStyle)),
-                        Expanded(
-                            flex: 15,
-                            child: Text('Qty',
-                                textAlign: TextAlign.center,
-                                style: receiptTextStyle)),
-                        Expanded(
-                            flex: 35,
-                            child: Text('Harga',
-                                textAlign: TextAlign.right,
-                                style: receiptTextStyle)),
-                        Expanded(
-                            flex: 35,
-                            child: Text('Total',
-                                textAlign: TextAlign.right,
-                                style: receiptTextStyle)),
-                      ],
-                    ),
-                    Divider(thickness: 0.5, color: Colors.grey),
-                    Row(
-                      children: [
-                        Expanded(
-                            flex: 15,
-                            child: Text('1',
-                                textAlign: TextAlign.left,
-                                style: receiptTextStyle)),
-                        Expanded(
-                            flex: 15,
-                            child: Text('2 PCS',
-                                textAlign: TextAlign.center,
-                                style: receiptTextStyle)),
-                        Expanded(
-                            flex: 35,
-                            child: Text('x 10.000',
-                                textAlign: TextAlign.right,
-                                style: receiptTextStyle)),
-                        Expanded(
-                            flex: 35,
-                            child: Text('20.000',
-                                textAlign: TextAlign.right,
-                                style: receiptTextStyle)),
-                      ],
-                    ),
-                    Divider(thickness: 0.5, color: Colors.grey),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('DISC', style: receiptTextStyle),
-                        Text('0', style: receiptTextStyle),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('TOTAL', style: receiptTextStyle),
-                        Text('0', style: receiptTextStyle),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('TUNAI', style: receiptTextStyle),
-                        Text('0', style: receiptTextStyle),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('KEMBALIAN', style: receiptTextStyle),
-                        Text('0', style: receiptTextStyle),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: _captureAndPrint,
-            child: Text("Print Receipt", style: TextStyle(fontSize: 9)),
-          ),
-        ],
-      ),
-    );
     return Scaffold(
         appBar: AppBar(
           title: const Text('Setup Printer'),
